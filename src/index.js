@@ -17,7 +17,7 @@ app.use(helmet())
 app.use(cors({ origin: settings.origin || "http://localhost/" }))
 app.use(express.json())
 
-app.get("/:appId/:key", function (req, res) {
+app.get("/:appId/:key.json", function (req, res) {
   const appId = clean(req.params.appId)
   const key = clean(req.params.key)
 
@@ -43,7 +43,7 @@ app.get("/:appId/:key", function (req, res) {
   }
 })
 
-app.post("/:appId/:key", function (req, res) {
+app.post("/:appId/:key.json", function (req, res) {
   const appId = clean(req.params.appId)
   const key = clean(req.params.key)
 
