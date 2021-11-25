@@ -8,7 +8,7 @@ const cors = require("cors")
 const clean = require("./string")
 const settings = require("./settings.json")
 
-const port = 3000
+const port = process.env.PORT || settings.port || 3000
 
 const CONTENT_TYPE = "Content-Type"
 const CONTENT_TYPE_JSON = "application/json; charset=utf-8"
@@ -72,6 +72,6 @@ app.post("/store/:appId/:key", function (req, res) {
   }
 })
 
-app.listen(process.env.PORT || port, () => {
+app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`)
 })
