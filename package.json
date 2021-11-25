@@ -1,0 +1,22 @@
+{
+  "name": "json-store",
+  "version": "1.0.0",
+  "description": "Simple json store",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "npx nodemon .",
+    "start": "NODE_ENV=production node .",
+    "tdd": "jest --watch",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^4.6.0"
+  },
+  "devDependencies": {
+    "jest": "^27.3.1"
+  }
+}
