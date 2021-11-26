@@ -12,8 +12,14 @@ const port = process.env.PORT || settings.port || 3000
 const CONTENT_TYPE = "Content-Type"
 const CONTENT_TYPE_JSON = "application/json; charset=utf-8"
 
+const corsConfig = {
+  origin: settings.origin || "http://localhost/",
+  methods: ["GET"],
+}
+console.log(`Configuring CORS with ${JSON.stringify(corsConfig)}`)
+
 app.disable("x-powered-by")
-app.use(cors({ origin: settings.origin || "http://localhost/" }))
+app.use(cors(corsConfig))
 app.use(express.json())
 
 app.get("/:appId/:key.json", function (req, res) {
