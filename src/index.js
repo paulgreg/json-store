@@ -2,7 +2,6 @@ const path = require("path")
 const fs = require("fs")
 const express = require("express")
 const app = express()
-const helmet = require("helmet")
 const cors = require("cors")
 
 const clean = require("./string")
@@ -13,7 +12,6 @@ const port = process.env.PORT || settings.port || 3000
 const CONTENT_TYPE = "Content-Type"
 const CONTENT_TYPE_JSON = "application/json; charset=utf-8"
 
-app.use(helmet())
 app.use(cors({ origin: settings.origin || "http://localhost/" }))
 app.use(express.json())
 
