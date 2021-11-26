@@ -23,11 +23,16 @@ app.get("/:appId/:key.json", function (req, res) {
 
   if (!appId || !key) return res.status(400).send("Bad Request")
 
-  const filePath = path.resolve(__dirname, "../data", appId, `${key}.json`)
+  const dirPath = path.resolve(__dirname, "../data", appId)
+  console.log(`looking for directory ${dirPath}`)
+
+  const filePath = path.resolve(dirPath, `${key}.json`)
   console.log(`looking for file ${filePath}`)
 
   try {
-    if (!fs.existsSync(filePath)) {
+    if (!fs.existsSync(dirPath)) {
+      res.status(403).send("Forbidden")
+    } else if (!fs.existsSync(filePath)) {
       res.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON)
       res.end("{}")
     } else {
@@ -53,19 +58,21 @@ app.post("/:appId/:key.json", function (req, res) {
   console.log(`looking for directory ${dirPath}`)
 
   try {
-    if (!fs.existsSync(dirPath)) fs.mkdirSync(dir)
+    if (!fs.existsSync(dirPath)) {
+      res.status(403).send("Forbidden")
+    } else {
+      const filePath = path.resolve(__dirname, "../data", appId, `${key}.json`)
+      console.log(`looking for file ${filePath}`)
 
-    const filePath = path.resolve(__dirname, "../data", appId, `${key}.json`)
-    console.log(`looking for file ${filePath}`)
+      const body = req.body || ""
+      if (body.length === 0) throw new Error("empty content")
+      console.log(`Writing ${body.length} bytes to ${filePath}`)
 
-    const body = req.body || ""
-    if (body.length === 0) throw new Error("empty content")
-    console.log(`Writing ${body.length} bytes to ${filePath}`)
-
-    fs.writeFile(filePath, JSON.stringify(body), function (err) {
-      if (err) throw err
-      res.status(200).end()
-    })
+      fs.writeFile(filePath, JSON.stringify(body), function (err) {
+        if (err) throw err
+        res.status(200).end()
+      })
+    }
   } catch (err) {
     console.error(err)
     res.status(500).send("Server error")
