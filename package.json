@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "npx nodemon .",
     "start": "NODE_ENV=production node .",
-    "tdd": "jest --watch",
-    "test": "jest"
+    "tdd": "jest --watch --config jest.unit.config.js",
+    "test": "jest --config jest.unit.config.js",
+    "integ": "rm -f data/test/post.json && jest --config jest.integ.config.js"
   },
   "author": "",
   "license": "MIT",
@@ -16,6 +17,7 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
-    "jest": "^27.3.1"
+    "jest": "^27.3.1",
+    "supertest": "^6.1.6"
   }
 }
