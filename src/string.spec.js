@@ -2,11 +2,12 @@ const { check } = require("./string")
 
 describe("string", () => {
   describe("check", () => {
-    ;["abc", "test", "12345678901234567890123456789012"].forEach((str) =>
-      test(`should return true for ${str}`, () =>
-        expect(check(str)).toEqual(true))
+    ;["abc", "test", "test1", "12345678901234567890123456789012"].forEach(
+      (str) =>
+        test(`should return true for ${str}`, () =>
+          expect(check(str)).toEqual(true))
     )
-    ;[".", " ", " a", "a.b", "a..b", "a/b", "a\\b"].forEach((str) =>
+    ;[".", " ", "a-a", "a b", "a.b", "a..b", "a/b", "a\\b"].forEach((str) =>
       test(`should return false for ${str}`, () =>
         expect(check(str)).toEqual(false))
     )
