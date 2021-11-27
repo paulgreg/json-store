@@ -2,14 +2,13 @@
 
 A simple node app used to get or save json as files on disk in `data`.
 
-You must first created a directory in `data` to « allow » json to be saved. Its correspond to `appId`. The file corresponds to `key`.
-
+You must first create a directory in `data` to « allow » json to be saved inside. 
 
 Payload are limited to 1 Mb.
 
 ## Limitations
 
-That app is a very simple JSON store for little and personal use. It is not designed to handle multiple users
+That app is a very simple JSON store for little and personal use. It is not designed to handle multiple users, especially if concurrent access are expected.
 
 ## Configuration
 
