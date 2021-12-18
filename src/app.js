@@ -36,8 +36,7 @@ app.get("/:appId/:key.json", function (req, res) {
     if (!fs.existsSync(dirPath)) {
       res.status(403).send("Forbidden")
     } else if (!fs.existsSync(filePath)) {
-      res.setHeader(CONTENT_TYPE, CONTENT_TYPE_JSON)
-      res.end("{}")
+      res.status(404).send("Not Found")
     } else {
       fs.readFile(filePath, function (err, content) {
         if (err) throw err

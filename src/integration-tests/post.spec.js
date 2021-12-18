@@ -5,7 +5,7 @@ describe("POST", () => {
   describe("nominal case", () => {
     test("should respond 200 with empty file for test/post.json", () =>
       request(app)
-        .get("/test/post.json")
+        .post("/test/post.json")
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual({})

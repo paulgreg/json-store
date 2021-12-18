@@ -11,19 +11,14 @@ describe("GET", () => {
         .then((response) => {
           expect(response.body).toEqual({ value: 1 })
         }))
-
-    test("should respond 200 for not existing file", () =>
-      request(app)
-        .get("/test/notexisting.json")
-        .expect(200)
-        .then((response) => {
-          expect(response.body).toEqual({})
-        }))
   })
 
   describe("error cases", () => {
     test("should respond 403 for non existing directory", () =>
       request(app).get("/unknow/test.json").expect(403))
+
+    test("should respond 404 for not existing file", () =>
+      request(app).get("/test/notexisting.json").expect(404))
 
     test("should respond 404 for empty key", () =>
       request(app).get("/test/.json").expect(404))
