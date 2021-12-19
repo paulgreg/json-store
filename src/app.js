@@ -18,7 +18,7 @@ console.log(`Configuring CORS with ${JSON.stringify(corsConfig)}`)
 
 app.disable("x-powered-by")
 app.use(cors(corsConfig))
-app.use(express.json())
+app.use(express.json({ limit: "1mb" }))
 
 app.get("/:appId/:key.json", function (req, res) {
   const appId = req.params.appId
@@ -68,7 +68,7 @@ app.post("/:appId/:key.json", function (req, res) {
 
       const body = req.body || ""
 
-      if (body.length === 0 || body.length > 1_000_000) {
+      if (body.length === 0) {
         console.error(`Bad content size : ${body.length}`)
         return res.status(400).send("Bad Request")
       }
