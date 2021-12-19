@@ -2,7 +2,16 @@
 
 A simple node app used to get or save json as files on disk in `data`.
 
-You must first create a directory in `data` to « allow » json to be saved inside. 
+Supported methods are :
+- `GET` which returns JSON if any or 404 if not found
+- `POST` with `content-type: application/json;` and JSON payload in body
+- `OPTIONS` to handle CORS
+
+URL format is `/json-store/:appId/:key.json`
+
+The `appId` refers to a directory that you *must* first create in `data` directory to authorize file to be saved there.
+
+`appId` and `key` are limited to 32 max characters (number, letters and `-`)
 
 Payload are limited to 1 Mb.
 
