@@ -1,6 +1,8 @@
 const request = require("supertest")
 const app = require("../app")
 
+const timestamp = Date.now()
+
 describe("POST", () => {
   describe("nominal case", () => {
     test("should respond 200 with empty file for test/post.json", () =>
@@ -14,7 +16,7 @@ describe("POST", () => {
     test("should respond 200 for a simple test json file", () =>
       request(app)
         .post("/test/post.json")
-        .send({ test: true })
+        .send({ timestamp })
         .set("Accept", "application/json")
         .expect(200))
 
@@ -23,7 +25,7 @@ describe("POST", () => {
         .get("/test/post.json")
         .expect(200)
         .then((response) => {
-          expect(response.body).toEqual({ test: true })
+          expect(response.body).toEqual({ timestamp })
         }))
   })
   describe("error cases", () => {
