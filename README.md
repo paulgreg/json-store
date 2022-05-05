@@ -1,11 +1,6 @@
 # json-store
 
-A simple node app used to get or save json as files on disk in `data`.
-
-Supported methods are :
-- `GET` which returns JSON if any or 404 if not found
-- `POST` with `content-type: application/json;` and JSON payload in body
-- `OPTIONS` to handle CORS
+A simple node app used to get or save json as files on disk in `data` directory.
 
 URL format is `/json-store/:appId/:key.json`
 
@@ -13,7 +8,19 @@ The `appId` refers to a directory that you *must* first create in `data` directo
 
 `appId` and `key` are limited to 32 max characters (number, letters and `-`)
 
-Payload are limited to 1 Mb.
+Payload are limited to 1 Mb by default (see `settings.json`).
+
+Supported methods are :
+- `GET` to `:appId/:key.json` which returns JSON from file if found or 404 otherwise
+- `POST` to `:appId/:key.json` with `content-type: application/json` and JSON payload in body to write that JSON to existing or new file
+- `OPTIONS` to handle CORS
+
+
+If you file is an array, you can use add or delete methods : 
+
+- `POST` to `:appId/add/:key.json` with `content-type: application/json` and JSON payload (object or array) in body to append data to existing or new file
+- `POST` to `:appId/del/:key.json` with `content-type: application/json` and JSON payload (object or array) in body to remove data from existing file
+
 
 ## Limitations
 

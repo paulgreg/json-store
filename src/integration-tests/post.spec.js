@@ -3,65 +3,111 @@ const app = require("../app")
 
 const timestamp = Date.now()
 
-describe("POST", () => {
+describe("Posting data to /test/post.json", () => {
   describe("nominal case", () => {
-    test("should respond 200 with empty file for test/post.json", () =>
+    test("should accept empty string", () =>
       request(app)
         .post("/test/post.json")
+        .set("Content-Type", "application/json")
+        .send("")
+        .expect(200))
+
+    test("should return empty content", () =>
+      request(app)
+        .get("/test/post.json")
+        .set("Accept", "application/json")
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual({})
         }))
 
-    test("should respond 200 for a simple test json file", () =>
+    test("should accept empty data", () =>
+      request(app)
+        .post("/test/post.json")
+        .set("Content-Type", "application/json")
+        .send({})
+        .expect(200))
+
+    test("should return empty content", () =>
+      request(app)
+        .get("/test/post.json")
+        .set("Accept", "application/json")
+        .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual({})
+        }))
+
+    test("should write data", () =>
       request(app)
         .post("/test/post.json")
         .send({ timestamp })
-        .set("Accept", "application/json")
-        .expect(200))
+        .set("Content-Type", "application/json")
+        .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual({})
+        }))
 
-    test("should respond 200 with content for test/post.json", () =>
+    test("should return written data", () =>
       request(app)
         .get("/test/post.json")
+        .set("Accept", "application/json")
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual({ timestamp })
         }))
-  })
-  describe("error cases", () => {
-    test("should respond 403 for non existing directory", () =>
-      request(app)
-        .post("/unknow/test.json")
-        .send({ test: true })
-        .set("Accept", "application/json")
-        .expect(403))
 
-    test("should respond 404 for empty key", () =>
+    test("should always return empty JSON", () =>
       request(app)
-        .post("/test/.json")
+        .post("/test/post.json")
         .send({ test: true })
-        .set("Accept", "application/json")
-        .expect(404))
+        .set("Content-Type", "application/json")
+        .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual({})
+        }))
 
-    test("should respond 404 for empty app", () =>
-      request(app)
-        .post("//a.json")
-        .send({ test: true })
-        .set("Accept", "application/json")
-        .expect(404))
+    describe("error cases", () => {
+      test("should respond 403 for non json object", () =>
+        request(app)
+          .post("/test/post.json")
+          .send("non json object")
+          .set("Content-Type", "application/json")
+          .expect(400))
 
-    test("should respond 400 if incorrect char in key", () =>
-      request(app)
-        .post("/test/idée.json")
-        .send({ test: true })
-        .set("Accept", "application/json")
-        .expect(400))
+      test("should respond 403 for non existing directory", () =>
+        request(app)
+          .post("/unknown/test.json")
+          .send({ test: true })
+          .set("Content-Type", "application/json")
+          .expect(403))
 
-    test("should respond 400 if incorrect char in app", () =>
-      request(app)
-        .post("/idée/test.json")
-        .send({ test: true })
-        .set("Accept", "application/json")
-        .expect(400))
+      test("should respond 404 for empty key", () =>
+        request(app)
+          .post("/test/.json")
+          .send({ test: true })
+          .set("Content-Type", "application/json")
+          .expect(404))
+
+      test("should respond 404 for empty app", () =>
+        request(app)
+          .post("//a.json")
+          .send({ test: true })
+          .set("Content-Type", "application/json")
+          .expect(404))
+
+      test("should respond 400 if incorrect char in key", () =>
+        request(app)
+          .post("/test/idée.json")
+          .send({ test: true })
+          .set("Content-Type", "application/json")
+          .expect(400))
+
+      test("should respond 400 if incorrect char in app", () =>
+        request(app)
+          .post("/idée/test.json")
+          .send({ test: true })
+          .set("Content-Type", "application/json")
+          .expect(400))
+    })
   })
 })

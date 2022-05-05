@@ -8,7 +8,7 @@
     "start": "NODE_ENV=production node .",
     "tdd": "jest --watch --config jest.unit.config.js",
     "test": "jest --config jest.unit.config.js",
-    "integ": "rm -f data/test/post.json && jest --config jest.integ.config.js"
+    "integ": "rm -f data/test/post.json data/test/add.json data/test/del.json && jest --config jest.integ.config.js"
   },
   "author": "",
   "license": "MIT",
