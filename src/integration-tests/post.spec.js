@@ -1,5 +1,8 @@
 const request = require("supertest")
 const app = require("../app")
+const {
+  authorization: { user, password },
+} = require("../settings.json")
 
 const timestamp = Date.now()
 
@@ -9,6 +12,7 @@ describe("Posting data to /test/post.json", () => {
       request(app)
         .post("/test/post.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send("")
         .expect(200))
 
@@ -16,6 +20,7 @@ describe("Posting data to /test/post.json", () => {
       request(app)
         .get("/test/post.json")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual({})
@@ -25,6 +30,7 @@ describe("Posting data to /test/post.json", () => {
       request(app)
         .post("/test/post.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send({})
         .expect(200))
 
@@ -32,6 +38,7 @@ describe("Posting data to /test/post.json", () => {
       request(app)
         .get("/test/post.json")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual({})
@@ -42,6 +49,7 @@ describe("Posting data to /test/post.json", () => {
         .post("/test/post.json")
         .send({ timestamp })
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual({})
@@ -51,6 +59,7 @@ describe("Posting data to /test/post.json", () => {
       request(app)
         .get("/test/post.json")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual({ timestamp })
@@ -61,17 +70,35 @@ describe("Posting data to /test/post.json", () => {
         .post("/test/post.json")
         .send({ test: true })
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual({})
         }))
 
     describe("error cases", () => {
+      test("should return 403 if bad password", () =>
+        request(app)
+          .post("/test/post.json")
+          .send({ timestamp })
+          .set("Content-Type", "application/json")
+          .auth(user, "bad password")
+          .expect(403))
+
+      test("should return 403 if bad user", () =>
+        request(app)
+          .post("/test/post.json")
+          .send({ timestamp })
+          .set("Content-Type", "application/json")
+          .auth("bad user", password)
+          .expect(403))
+
       test("should respond 403 for non json object", () =>
         request(app)
           .post("/test/post.json")
           .send("non json object")
           .set("Content-Type", "application/json")
+          .auth(user, password)
           .expect(400))
 
       test("should respond 403 for non existing directory", () =>
@@ -79,6 +106,7 @@ describe("Posting data to /test/post.json", () => {
           .post("/unknown/test.json")
           .send({ test: true })
           .set("Content-Type", "application/json")
+          .auth(user, password)
           .expect(403))
 
       test("should respond 404 for empty key", () =>
@@ -86,6 +114,7 @@ describe("Posting data to /test/post.json", () => {
           .post("/test/.json")
           .send({ test: true })
           .set("Content-Type", "application/json")
+          .auth(user, password)
           .expect(404))
 
       test("should respond 404 for empty app", () =>
@@ -93,6 +122,7 @@ describe("Posting data to /test/post.json", () => {
           .post("//a.json")
           .send({ test: true })
           .set("Content-Type", "application/json")
+          .auth(user, password)
           .expect(404))
 
       test("should respond 400 if incorrect char in key", () =>
@@ -100,6 +130,7 @@ describe("Posting data to /test/post.json", () => {
           .post("/test/idée.json")
           .send({ test: true })
           .set("Content-Type", "application/json")
+          .auth(user, password)
           .expect(400))
 
       test("should respond 400 if incorrect char in app", () =>
@@ -107,6 +138,7 @@ describe("Posting data to /test/post.json", () => {
           .post("/idée/test.json")
           .send({ test: true })
           .set("Content-Type", "application/json")
+          .auth(user, password)
           .expect(400))
     })
   })

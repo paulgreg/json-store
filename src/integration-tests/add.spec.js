@@ -1,5 +1,8 @@
 const request = require("supertest")
 const app = require("../app")
+const {
+  authorization: { user, password },
+} = require("../settings.json")
 
 describe("Adding data via /test/add/add.json", () => {
   describe("nominal case", () => {
@@ -7,6 +10,7 @@ describe("Adding data via /test/add/add.json", () => {
       request(app)
         .post("/test/add/add.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send({ item: 1 })
         .expect(200))
 
@@ -14,6 +18,7 @@ describe("Adding data via /test/add/add.json", () => {
       request(app)
         .get("/test/add.json")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([{ item: 1 }])
@@ -23,6 +28,7 @@ describe("Adding data via /test/add/add.json", () => {
       request(app)
         .post("/test/add/add.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send([2])
         .expect(200))
 
@@ -30,6 +36,7 @@ describe("Adding data via /test/add/add.json", () => {
       request(app)
         .get("/test/add.json")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([{ item: 1 }, 2])
@@ -39,6 +46,7 @@ describe("Adding data via /test/add/add.json", () => {
       request(app)
         .post("/test/add/add.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send([{ item: 3 }, { item: 4 }])
         .expect(200))
 
@@ -46,6 +54,7 @@ describe("Adding data via /test/add/add.json", () => {
       request(app)
         .get("/test/add.json")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([
@@ -58,10 +67,27 @@ describe("Adding data via /test/add/add.json", () => {
   })
 
   describe("error cases", () => {
+    test("should return 403 if bad password", () =>
+      request(app)
+        .post("/test/add/add.json")
+        .set("Content-Type", "application/json")
+        .auth(user, "bad password")
+        .send({ item: 1 })
+        .expect(403))
+
+    test("should return 403 if bad user", () =>
+      request(app)
+        .post("/test/add/add.json")
+        .set("Content-Type", "application/json")
+        .auth("bad user", password)
+        .send({ item: 1 })
+        .expect(403))
+
     test("should respond 400 if empty content", () =>
       request(app)
         .post("/test/add/add.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send("")
         .expect(400))
 
@@ -69,6 +95,7 @@ describe("Adding data via /test/add/add.json", () => {
       request(app)
         .post("/unknown/add/test.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send({ test: true })
         .expect(403))
 
@@ -76,6 +103,7 @@ describe("Adding data via /test/add/add.json", () => {
       request(app)
         .post("/test/add/.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send({ test: true })
         .expect(404))
 
@@ -83,6 +111,7 @@ describe("Adding data via /test/add/add.json", () => {
       request(app)
         .post("/test/add/idée.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send({ test: true })
         .expect(400))
 
@@ -90,6 +119,7 @@ describe("Adding data via /test/add/add.json", () => {
       request(app)
         .post("/idée/add/test.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send({ test: true })
         .expect(400))
   })

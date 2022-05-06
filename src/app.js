@@ -2,6 +2,7 @@ const settings = require("./settings.json")
 
 const express = require("express")
 const cors = require("cors")
+const authorizationMiddleware = require("./authorizationMiddleware")
 
 const get = require("./actions/get")
 const post = require("./actions/post")
@@ -13,9 +14,12 @@ const app = express()
 const corsConfig = {
   origin: settings.origin || "http://localhost",
   methods: ["GET", "POST"],
+  allowedHeaders: ["Authorization", "Content-Type", "Accept"],
 }
 
 app.disable("x-powered-by")
+
+app.use(authorizationMiddleware)
 
 console.log(`Configuring CORS with ${JSON.stringify(corsConfig)}`)
 app.use(cors(corsConfig))

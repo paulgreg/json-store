@@ -44,7 +44,6 @@ const del = (req, res) => {
         }
 
         const dataToWrite = JSON.stringify(removeBodyFromContent(content, body))
-        console.log("dataToWrite", dataToWrite)
         console.info(
           `Writing ${dataToWrite.length} bytes to existing file ${filePath}`
         )

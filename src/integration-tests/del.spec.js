@@ -1,5 +1,8 @@
 const request = require("supertest")
 const app = require("../app")
+const {
+  authorization: { user, password },
+} = require("../settings.json")
 
 describe("Delete data from /test/del/del.json", () => {
   describe("nominal case", () => {
@@ -7,6 +10,7 @@ describe("Delete data from /test/del/del.json", () => {
       request(app)
         .post("/test/add/del.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send([
           { item: 1 },
           2,
@@ -20,6 +24,7 @@ describe("Delete data from /test/del/del.json", () => {
       request(app)
         .get("/test/del.json")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([
@@ -35,6 +40,7 @@ describe("Delete data from /test/del/del.json", () => {
       request(app)
         .post("/test/del/del.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send({ item: 1 })
         .expect(200))
 
@@ -42,6 +48,7 @@ describe("Delete data from /test/del/del.json", () => {
       request(app)
         .get("/test/del.json")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([
@@ -56,6 +63,7 @@ describe("Delete data from /test/del/del.json", () => {
       request(app)
         .post("/test/del/del.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send({ item: 4, value: true })
         .expect(200))
 
@@ -63,6 +71,7 @@ describe("Delete data from /test/del/del.json", () => {
       request(app)
         .get("/test/del.json")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([2, { item: 4 }, { item: 5 }])
@@ -72,6 +81,7 @@ describe("Delete data from /test/del/del.json", () => {
       request(app)
         .post("/test/del/del.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send([2])
         .expect(200))
 
@@ -79,6 +89,7 @@ describe("Delete data from /test/del/del.json", () => {
       request(app)
         .get("/test/del.json")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([{ item: 4 }, { item: 5 }])
@@ -88,6 +99,7 @@ describe("Delete data from /test/del/del.json", () => {
       request(app)
         .post("/test/del/del.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send([{ item: 4 }, { item: 5 }])
         .expect(200))
 
@@ -95,15 +107,17 @@ describe("Delete data from /test/del/del.json", () => {
       request(app)
         .get("/test/del.json")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([])
         }))
 
-    test("should remove { notFound: true }", () =>
+    test("should respond 200 for not found data: { notFound: true }", () =>
       request(app)
         .post("/test/del/del.json")
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .send({ notFound: true })
         .expect(200))
 
@@ -111,17 +125,35 @@ describe("Delete data from /test/del/del.json", () => {
       request(app)
         .get("/test/del.json")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([])
         }))
   })
   describe("error cases", () => {
+    test("should return 403 if bad password", () =>
+      request(app)
+        .post("/test/del/del.json")
+        .set("Content-Type", "application/json")
+        .auth(user, "bad password")
+        .send({ item: 1 })
+        .expect(403))
+
+    test("should return 403 if bad user", () =>
+      request(app)
+        .post("/test/del/del.json")
+        .set("Content-Type", "application/json")
+        .auth("bad user", password)
+        .send({ item: 1 })
+        .expect(403))
+
     test("should respond 400 if empty content", () =>
       request(app)
         .post("/test/del/del.json")
         .send("")
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(400))
 
     test("should respond 400 if empty object", () =>
@@ -129,6 +161,7 @@ describe("Delete data from /test/del/del.json", () => {
         .post("/test/del/del.json")
         .send({})
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .expect(400))
 
     test("should respond 400 if empty array", () =>
@@ -136,6 +169,7 @@ describe("Delete data from /test/del/del.json", () => {
         .post("/test/del/del.json")
         .send([])
         .set("Content-Type", "application/json")
+        .auth(user, password)
         .expect(400))
 
     test("should respond 403 for non existing directory", () =>
@@ -143,6 +177,7 @@ describe("Delete data from /test/del/del.json", () => {
         .post("/unknown/del/del.json")
         .send({ test: true })
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(403))
 
     test("should respond 404 for not existing file", () =>
@@ -150,6 +185,7 @@ describe("Delete data from /test/del/del.json", () => {
         .post("/test/del/unknown.json")
         .send({ test: true })
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(404))
 
     test("should respond 404 for empty key", () =>
@@ -157,6 +193,7 @@ describe("Delete data from /test/del/del.json", () => {
         .post("/test/del/.json")
         .send({ test: true })
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(404))
 
     test("should respond 400 if incorrect char in key", () =>
@@ -164,6 +201,7 @@ describe("Delete data from /test/del/del.json", () => {
         .post("/test/del/idée.json")
         .send({ test: true })
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(400))
 
     test("should respond 400 if incorrect char in app", () =>
@@ -171,6 +209,7 @@ describe("Delete data from /test/del/del.json", () => {
         .post("/idée/del/test.json")
         .send({ test: true })
         .set("Accept", "application/json")
+        .auth(user, password)
         .expect(400))
   })
 })
