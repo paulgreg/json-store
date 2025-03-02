@@ -4,7 +4,7 @@
   "description": "Simple json store",
   "main": "src/index.js",
   "scripts": {
-    "dev": "npx nodemon .",
+    "dev": "npx nodemon . --ignore 'data/'",
     "start": "NODE_ENV=production node .",
     "tdd": "jest --watch --config jest.unit.config.js",
     "test": "jest --config jest.unit.config.js",
