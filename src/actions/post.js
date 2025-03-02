@@ -1,6 +1,6 @@
-const fs = require("fs")
-const { getFilePath } = require("../file")
-const { BadRequestError, handleError } = require("../errors")
+const fs = require('fs')
+const { getFilePath } = require('../file')
+const { BadRequestError, handleError } = require('../errors')
 
 const post = (req, res) => {
   try {

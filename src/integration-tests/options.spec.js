@@ -1,14 +1,14 @@
-const request = require("supertest")
-const app = require("../app")
+const request = require('supertest')
+const app = require('../app')
 
-describe("OPTIONS", () => {
-  test("should respond to pre-flight request", () =>
+describe('OPTIONS', () => {
+  test('should respond to pre-flight request', () =>
     request(app)
-      .options("/test/test.json")
-      .expect("Access-Control-Allow-Methods", "GET,POST")
+      .options('/test/test.json')
+      .expect('Access-Control-Allow-Methods', 'GET,POST,PATCH')
       .expect(
-        "Access-Control-Allow-Headers",
-        "Authorization,Content-Type,Accept"
+        'Access-Control-Allow-Headers',
+        'Authorization,Content-Type,Accept'
       )
       .expect(204))
 })

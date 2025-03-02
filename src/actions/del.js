@@ -1,6 +1,6 @@
-const fs = require("fs")
-const { getFilePath } = require("../file")
-const { BadRequestError, NotFoundError, handleError } = require("../errors")
+const fs = require('fs')
+const { getFilePath } = require('../file')
+const { BadRequestError, NotFoundError, handleError } = require('../errors')
 
 const removeBodyFromContent = (content, bodyAsArrayOrObject) => {
   const body = Array.isArray(bodyAsArrayOrObject)
@@ -19,10 +19,10 @@ const del = (req, res) => {
     const bodyAsString = JSON.stringify(body)
 
     if (
-      typeof body !== "object" ||
+      typeof body !== 'object' ||
       bodyAsString.length === 0 ||
-      bodyAsString === "{}" ||
-      bodyAsString === "[]"
+      bodyAsString === '{}' ||
+      bodyAsString === '[]'
     ) {
       console.error(`Bad content size : ${bodyAsString.length}`)
       throw new BadRequestError()

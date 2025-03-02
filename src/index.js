@@ -1,5 +1,5 @@
-const app = require("./app")
-const settings = require("./settings.json")
+const app = require('./app')
+const settings = require('./settings.json')
 
 const port = process.env.PORT || settings.port || 3000
 
