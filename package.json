@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "start": "NODE_ENV=production node dist/index.js",
     "test": "vitest --watch=false",
     "integ": "rm -f data/test/post.json data/test/add.json data/test/del.json && vitest -c vite.integ.config.js --watch=false"
