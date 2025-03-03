@@ -1,8 +1,8 @@
-const fs = require('fs')
+const fs = require('fs/promises')
 const { getFilePath } = require('../file')
 const { BadRequestError, handleError } = require('../errors')
 
-const add = (req, res) => {
+const add = async (req, res) => {
   try {
     const filePath = getFilePath(req, res)
 
@@ -14,41 +14,32 @@ const add = (req, res) => {
       throw new BadRequestError()
     }
 
-    if (!fs.existsSync(filePath)) {
-      const dataToWrite = JSON.stringify([].concat(body))
-      console.info(
-        `Writing ${dataToWrite.length} bytes to new file ${filePath}`
-      )
-      fs.writeFile(filePath, dataToWrite, function (err) {
-        if (err) throw err
-        res.status(200).end()
-      })
-    } else {
-      fs.readFile(filePath, function (err, contentAsBuffer) {
-        if (err) throw err
+    let content
 
-        const contentAsString = contentAsBuffer.toString() || ''
-        const content = JSON.parse(contentAsString)
-
-        if (!Array.isArray(content)) {
-          console.error(`Existing content is not an array`)
-          throw new BadRequestError()
-        }
-
-        const dataToWrite = JSON.stringify(content.concat(body))
-        console.info(
-          `Writing ${dataToWrite.length} bytes to existing file ${filePath}`
-        )
-
-        fs.writeFile(filePath, dataToWrite, function (err) {
-          if (err) throw err
-          res.status(200).end()
-        })
-      })
+    try {
+      const contentAsBuffer = await fs.readFile(filePath)
+      const contentAsString = contentAsBuffer.toString() || ''
+      content = JSON.parse(contentAsString)
+      if (!Array.isArray(content)) {
+        console.error(`Existing content is not an array`)
+        throw new BadRequestError()
+      }
+    } catch (err) {
+      if (err.code === 'ENOENT') {
+        content = []
+      } else {
+        throw err
+      }
     }
+    const dataToWrite = JSON.stringify(content.concat(body))
+
+    console.info(
+      `Writing ${dataToWrite.length} bytes to existing file ${filePath}`
+    )
+    await fs.writeFile(filePath, dataToWrite)
+    res.status(200).end()
   } catch (err) {
     handleError(res, err)
   }
 }
-
 module.exports = add

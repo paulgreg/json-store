@@ -1,8 +1,8 @@
-const fs = require('fs')
+const fs = require('fs/promises')
 const { getFilePath } = require('../file')
 const { BadRequestError, handleError } = require('../errors')
 
-const post = (req, res) => {
+const post = async (req, res) => {
   try {
     const filePath = getFilePath(req, res)
 
@@ -15,13 +15,10 @@ const post = (req, res) => {
 
     console.info(`Writing ${bodyAsString.length} bytes to ${filePath}`)
 
-    fs.writeFile(filePath, bodyAsString, function (err) {
-      if (err) throw err
-      res.status(200).end()
-    })
+    await fs.writeFile(filePath, bodyAsString)
+    res.status(200).end()
   } catch (err) {
     handleError(res, err)
   }
 }
-
 module.exports = post
