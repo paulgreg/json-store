@@ -1,4 +1,4 @@
-const { checkStr } = require('./string')
+import { checkStr } from './string'
 
 describe('string', () => {
   describe('checkStr', () => {

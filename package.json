@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "npx nodemon . --ignore 'data/'",
     "start": "NODE_ENV=production node .",
-    "test": "vitest",
-    "integ": "rm -f data/test/post.json data/test/add.json data/test/del.json && vitest -c vite.integ.config.js"
+    "test": "vitest --watch=false",
+    "integ": "rm -f data/test/post.json data/test/add.json data/test/del.json && vitest -c vite.integ.config.js --watch=false"
   },
-  "author": "",
+  "author": "Grégory PAUL",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
