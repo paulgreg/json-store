@@ -1,6 +1,6 @@
 const fs = require('fs/promises')
 const { getFilePath } = require('../file')
-const { BadRequestError, handleError } = require('../errors')
+const { BadRequestError, handleError, NotFoundError } = require('../errors')
 const jsonpatch = require('fast-json-patch')
 
 const patch = async (req, res) => {
