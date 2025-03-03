@@ -1,8 +1,9 @@
-const fs = require('fs/promises')
-const { getFilePath } = require('../file')
-const { BadRequestError, handleError } = require('../errors')
+import type { Request, Response } from 'express'
+import fs from 'fs/promises'
+import { getFilePath } from '../file'
+import { BadRequestError, handleError } from '../errors'
 
-const post = async (req, res) => {
+const post = async (req: Request, res: Response) => {
   try {
     const filePath = getFilePath(req, res)
 
@@ -18,7 +19,8 @@ const post = async (req, res) => {
     await fs.writeFile(filePath, bodyAsString)
     res.status(200).end()
   } catch (err) {
-    handleError(res, err)
+    handleError(res, err as Error)
   }
 }
-module.exports = post
+
+export default post

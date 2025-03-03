@@ -1,10 +1,19 @@
-class BadRequestError extends Error {}
+import type { Response } from 'express'
 
-class ForbiddenError extends Error {}
+export class FsError extends Error {
+  code?: string
+}
 
-class NotFoundError extends Error {}
+export class BadRequestError extends Error {}
 
-const handleError = (res, err) => {
+export class ForbiddenError extends Error {}
+
+export class NotFoundError extends Error {}
+
+export const handleError = (
+  res: Response,
+  err: BadRequestError | ForbiddenError | NotFoundError | Error
+) => {
   if (err instanceof NotFoundError) {
     console.warn(err)
     res.status(404).send('Not Found')
@@ -18,11 +27,4 @@ const handleError = (res, err) => {
     console.error(err)
     res.status(500).send('Server error')
   }
-}
-
-module.exports = {
-  BadRequestError,
-  ForbiddenError,
-  NotFoundError,
-  handleError,
 }

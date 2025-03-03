@@ -1,8 +1,12 @@
-const fs = require('fs/promises')
-const { getFilePath } = require('../file')
-const { BadRequestError, NotFoundError, handleError } = require('../errors')
+import type { Request, Response } from 'express'
+import fs from 'fs/promises'
+import { getFilePath } from '../file'
+import { BadRequestError, NotFoundError, handleError } from '../errors'
 
-const removeBodyFromContent = (content, bodyAsArrayOrObject) => {
+const removeBodyFromContent = (
+  content: Array<unknown>,
+  bodyAsArrayOrObject: unknown
+) => {
   const body = Array.isArray(bodyAsArrayOrObject)
     ? bodyAsArrayOrObject
     : [bodyAsArrayOrObject]
@@ -10,7 +14,8 @@ const removeBodyFromContent = (content, bodyAsArrayOrObject) => {
   const bodyAsString = body.map((item) => JSON.stringify(item))
   return content.filter((item) => !bodyAsString.includes(JSON.stringify(item)))
 }
-const del = async (req, res) => {
+
+const del = async (req: Request, res: Response) => {
   try {
     const filePath = getFilePath(req, res)
 
@@ -51,7 +56,8 @@ const del = async (req, res) => {
     await fs.writeFile(filePath, dataToWrite)
     res.status(200).end()
   } catch (err) {
-    handleError(res, err)
+    handleError(res, err as Error)
   }
 }
-module.exports = del
+
+export default del

@@ -1,8 +1,8 @@
-const settings = require('./settings.json')
-const { ForbiddenError, handleError } = require('./errors')
+import type { Request, Response, NextFunction } from 'express'
+import { ForbiddenError, handleError } from './errors'
 
 const encodedUserandPassword = Buffer.from(
-  `${settings.authorization.user}:${settings.authorization.password}`,
+  `${process.env.AUTH_USER}:${process.env.AUTH_PASSWORD}`,
   'utf-8'
 ).toString('base64')
 
@@ -10,7 +10,11 @@ const expectedAuthorizationString = `Basic ${encodedUserandPassword}`
 
 console.log(`Expected authorization '${expectedAuthorizationString}'`)
 
-const authorizationMiddleware = (req, res, next) => {
+const authorizationMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     if (req.method !== 'OPTIONS') {
       const authorization = req.headers.authorization
@@ -21,8 +25,8 @@ const authorizationMiddleware = (req, res, next) => {
     }
     next()
   } catch (err) {
-    handleError(res, err)
+    handleError(res, err as Error)
   }
 }
 
-module.exports = authorizationMiddleware
+export default authorizationMiddleware

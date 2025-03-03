@@ -1,14 +1,15 @@
-const fs = require('fs/promises')
-const { getFilePath } = require('../file')
-const { NotFoundError, handleError } = require('../errors')
-const {
+import type { Request, Response } from 'express'
+import fs from 'fs/promises'
+import { getFilePath } from '../file'
+import { NotFoundError, handleError } from '../errors'
+import {
   CONTENT_TYPE,
   CONTENT_TYPE_JSON,
   CACHE_CONTROL,
   NO_CACHE,
-} = require('../http')
+} from '../http'
 
-const get = async (req, res) => {
+const get = async (req: Request, res: Response) => {
   try {
     const filePath = getFilePath(req, res)
 
@@ -21,7 +22,7 @@ const get = async (req, res) => {
 
     const stats = await fs.stat(filePath)
     const mtime = stats?.mtime
-    const lastModified = new Date(mtime).toGMTString()
+    const lastModified = new Date(mtime).toUTCString()
     res.setHeader('Last-Modified', lastModified)
 
     const ifModifiedSince = (
@@ -37,8 +38,8 @@ const get = async (req, res) => {
       res.end(content)
     }
   } catch (err) {
-    handleError(res, err)
+    handleError(res, err as Error)
   }
 }
 
-module.exports = get
+export default get

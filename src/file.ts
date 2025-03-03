@@ -1,13 +1,14 @@
-const fs = require('fs')
-const path = require('path')
-const { BadRequestError, ForbiddenError } = require('./errors')
-const { checkStr } = require('./string')
+import type { Request, Response } from 'express'
+import fs from 'fs'
+import path from 'path'
+import { BadRequestError, ForbiddenError } from './errors'
+import { checkStr } from './string'
 
-const getFilePath = (req, res) => {
+export const getFilePath = (req: Request, res: Response) => {
   const appId = req.params.appId
   const key = req.params.key
 
-  if (!checkStr(appId) || !checkStr(key)) {
+  if (!appId || !key || !checkStr(appId) || !checkStr(key)) {
     console.error('appId or key malformed', appId, key)
     throw new BadRequestError()
   }
@@ -25,5 +26,3 @@ const getFilePath = (req, res) => {
 
   return filePath
 }
-
-module.exports = { getFilePath }

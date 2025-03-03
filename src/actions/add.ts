@@ -1,8 +1,9 @@
-const fs = require('fs/promises')
-const { getFilePath } = require('../file')
-const { BadRequestError, handleError } = require('../errors')
+import type { Request, Response } from 'express'
+import fs from 'fs/promises'
+import { getFilePath } from '../file'
+import { BadRequestError, FsError, handleError } from '../errors'
 
-const add = async (req, res) => {
+const add = async (req: Request, res: Response) => {
   try {
     const filePath = getFilePath(req, res)
 
@@ -25,7 +26,7 @@ const add = async (req, res) => {
         throw new BadRequestError()
       }
     } catch (err) {
-      if (err.code === 'ENOENT') {
+      if ((err as FsError).code === 'ENOENT') {
         content = []
       } else {
         throw err
@@ -39,7 +40,8 @@ const add = async (req, res) => {
     await fs.writeFile(filePath, dataToWrite)
     res.status(200).end()
   } catch (err) {
-    handleError(res, err)
+    handleError(res, err as Error)
   }
 }
-module.exports = add
+
+export default add

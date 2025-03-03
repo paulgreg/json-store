@@ -2,10 +2,11 @@
   "name": "json-store",
   "version": "1.0.0",
   "description": "Simple json store",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "npx nodemon . --ignore 'data/'",
-    "start": "NODE_ENV=production node .",
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "NODE_ENV=production node dist/index.js",
     "test": "vitest --watch=false",
     "integ": "rm -f data/test/post.json data/test/add.json data/test/del.json && vitest -c vite.integ.config.js --watch=false"
   },
@@ -13,12 +14,18 @@
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "fast-json-patch": "^3.1.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.8",
     "prettier": "^3.5.2",
     "supertest": "^7.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
     "vitest": "^3.0.7"
   }
 }

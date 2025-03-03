@@ -1,9 +1,0 @@
-{
-    "port": 3001,
-    "origin": "https://example.com",
-    "authorization": { 
-        "user": "user",
-        "password": "password-which-should-be-a-long-random-of-64-char-string"
-    },
-    "uploadLimit": "1mb"
-}

@@ -1,8 +1,5 @@
-const request = require('supertest')
-const app = require('../app')
-const {
-  authorization: { user, password },
-} = require('../settings.json')
+import request from 'supertest'
+import app from '../app'
 
 describe('Delete data from /test/del/del.json', () => {
   describe('nominal case', () => {
@@ -10,7 +7,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .post('/test/del.json')
         .set('Content-Type', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .send([
           { item: 1 },
           2,
@@ -24,7 +21,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .get('/test/del.json')
         .set('Accept', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([
@@ -40,7 +37,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .post('/test/del/del.json')
         .set('Content-Type', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .send({ item: 1 })
         .expect(200))
 
@@ -48,7 +45,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .get('/test/del.json')
         .set('Accept', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([
@@ -63,7 +60,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .post('/test/del/del.json')
         .set('Content-Type', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .send({ item: 4, value: true })
         .expect(200))
 
@@ -71,7 +68,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .get('/test/del.json')
         .set('Accept', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([2, { item: 4 }, { item: 5 }])
@@ -81,7 +78,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .post('/test/del/del.json')
         .set('Content-Type', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .send([2])
         .expect(200))
 
@@ -89,7 +86,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .get('/test/del.json')
         .set('Accept', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([{ item: 4 }, { item: 5 }])
@@ -99,7 +96,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .post('/test/del/del.json')
         .set('Content-Type', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .send([{ item: 4 }, { item: 5 }])
         .expect(200))
 
@@ -107,7 +104,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .get('/test/del.json')
         .set('Accept', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([])
@@ -117,7 +114,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .post('/test/del/del.json')
         .set('Content-Type', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .send({ notFound: true })
         .expect(200))
 
@@ -125,7 +122,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .get('/test/del.json')
         .set('Accept', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual([])
@@ -136,7 +133,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .post('/test/del/del.json')
         .set('Content-Type', 'application/json')
-        .auth(user, 'bad password')
+        .auth(process.env.AUTH_USER, 'bad password')
         .send({ item: 1 })
         .expect(403))
 
@@ -144,7 +141,7 @@ describe('Delete data from /test/del/del.json', () => {
       request(app)
         .post('/test/del/del.json')
         .set('Content-Type', 'application/json')
-        .auth('bad user', password)
+        .auth('bad user', process.env.AUTH_PASSWORD)
         .send({ item: 1 })
         .expect(403))
 
@@ -153,7 +150,7 @@ describe('Delete data from /test/del/del.json', () => {
         .post('/test/del/del.json')
         .send('')
         .set('Accept', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(400))
 
     test('should respond 400 if empty object', () =>
@@ -161,7 +158,7 @@ describe('Delete data from /test/del/del.json', () => {
         .post('/test/del/del.json')
         .send({})
         .set('Content-Type', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(400))
 
     test('should respond 400 if empty array', () =>
@@ -169,7 +166,7 @@ describe('Delete data from /test/del/del.json', () => {
         .post('/test/del/del.json')
         .send([])
         .set('Content-Type', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(400))
 
     test('should respond 403 for non existing directory', () =>
@@ -177,7 +174,7 @@ describe('Delete data from /test/del/del.json', () => {
         .post('/unknown/del/del.json')
         .send({ test: true })
         .set('Accept', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(403))
 
     test('should respond 404 for not existing file', () =>
@@ -185,7 +182,7 @@ describe('Delete data from /test/del/del.json', () => {
         .post('/test/del/unknown.json')
         .send({ test: true })
         .set('Accept', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(404))
 
     test('should respond 404 for empty key', () =>
@@ -193,7 +190,7 @@ describe('Delete data from /test/del/del.json', () => {
         .post('/test/del/.json')
         .send({ test: true })
         .set('Accept', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(404))
 
     test('should respond 400 if incorrect char in key', () =>
@@ -201,7 +198,7 @@ describe('Delete data from /test/del/del.json', () => {
         .post('/test/del/idée.json')
         .send({ test: true })
         .set('Accept', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(400))
 
     test('should respond 400 if incorrect char in app', () =>
@@ -209,7 +206,7 @@ describe('Delete data from /test/del/del.json', () => {
         .post('/idée/del/test.json')
         .send({ test: true })
         .set('Accept', 'application/json')
-        .auth(user, password)
+        .auth(process.env.AUTH_USER, process.env.AUTH_PASSWORD)
         .expect(400))
   })
 })

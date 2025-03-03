@@ -8,7 +8,7 @@ The `appId` refers to a directory that you *must* first create in `data` directo
 
 `appId` and `key` are limited to 32 max characters (number, letters and `-`)
 
-Payload are limited to 1 Mb by default (see `settings.json`).
+Payload are limited to 1 Mb by default.
 
 Supported methods are :
 - `GET` to `:appId/:key.json` which returns JSON from file if found or 404 otherwise
@@ -29,10 +29,12 @@ That app is a very simple JSON store for little and personal use. It is not desi
 
 ## Configuration
 
-Copy `src/settings.json.dist` to `src/settings.json` and update values :
-- `port` for server port, which also can be set by `process.env.PORT`
-- `origin`, used to populate `Access-Control-Allow-Origin` header, can be a string or an array. Values should *not* contains ending slash
-- `authorization` should absolutly be updated using a long 64 characters password.
+Copy `.env.dist` to `.env` and update values :
+- `PORT` for server port, which also can be set by `process.env.PORT`
+- `ORIGIN`, used to populate `Access-Control-Allow-Origin` header, can be single value or multiple values separated by comma. Values should *not* contains ending slash
+- `AUTH_USER`
+- `AUTH_PASSWORD` should be updated using a long 64 characters password.
+- `UPLOAD_LIMIT`
 
 
 ## Security
