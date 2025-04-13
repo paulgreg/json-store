@@ -14,18 +14,18 @@
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "fast-json-patch": "^3.1.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
-    "@types/node": "^22.13.17",
+    "@types/node": "^22.14.1",
     "prettier": "^3.5.3",
     "supertest": "^7.1.0",
     "tsx": "^4.19.3",
-    "typescript": "^5.8.2",
+    "typescript": "^5.8.3",
     "vitest": "^3.1.1"
   }
 }
